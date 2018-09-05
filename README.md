@@ -24,3 +24,7 @@ http://localhost:8080/token/generate-token
 
 Step3: get All users(Get)
 http://localhost:8080/users
+
+
+Branch: swagger_impl
+Access swagger using http://localhost:8080/swagger-ui.html
