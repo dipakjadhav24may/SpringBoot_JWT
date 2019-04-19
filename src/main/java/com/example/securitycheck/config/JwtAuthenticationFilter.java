@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.SimpleIdGenerator;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.securitycheck.model.Constants;
@@ -56,9 +57,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
+            SimpleGrantedAuthority simpleGrantedAuthority;
             if (jwtTokenUtil.validateToken(authToken, userDetails)) {
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
+            	if(userDetails.getUsername().equals("test")) {
+            		 simpleGrantedAuthority=new SimpleGrantedAuthority("ADMIN");
+            	}else {
+           		 simpleGrantedAuthority=new SimpleGrantedAuthority("ROLE_ADMIN");
+
+            	}
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, Arrays.asList(simpleGrantedAuthority));
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
                 logger.info("authenticated user " + username + ", setting security context");
                 SecurityContextHolder.getContext().setAuthentication(authentication);

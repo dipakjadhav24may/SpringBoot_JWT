@@ -18,6 +18,7 @@ import com.example.securitycheck.config.JwtTokenUtil;
 import com.example.securitycheck.model.AuthToken;
 import com.example.securitycheck.model.LoginUser;
 import com.example.securitycheck.model.User;
+import com.example.securitycheck.model.UserDto;
 import com.example.securitycheck.service.UserService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -35,7 +36,7 @@ public class AuthenticationController {
     private UserService userService;
 
     @RequestMapping(value = "/generate-token", method = RequestMethod.POST)
-    public ResponseEntity<?> register(@RequestBody LoginUser loginUser) throws AuthenticationException {
+    public ResponseEntity<?> getTokenUsingCredentials(@RequestBody LoginUser loginUser) throws AuthenticationException {
 
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -48,6 +49,11 @@ public class AuthenticationController {
         final String token = jwtTokenUtil.generateToken(user);
         return ResponseEntity.ok(new AuthToken(token));
     }
+    
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+	public User saveUser(@RequestBody UserDto user) {
+		return userService.save(user);
+	}
 
 }
 
